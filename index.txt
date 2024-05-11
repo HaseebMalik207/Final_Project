@@ -62,6 +62,12 @@ public:
     const vector<string>& getShoppingCart() const {
         return shoppingCart;
     }
+    void addToOrderHistory(const string& order) {
+        orderHistory.push_back(order);
+    }
+    const vector<string>& getOrderHistory() const {
+        return orderHistory;
+    }
 };
 class UserDatabase {
 private:
