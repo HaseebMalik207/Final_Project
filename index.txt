@@ -202,4 +202,19 @@ public:
             cout << "No laptops found within the specified price range" << endl;
         }
     }
+    void displayProductDetails(const string& brand) const {
+        cout << "Product Details for Brand: " << brand << endl;
+        bool found = false;
+        for (const auto& laptop : laptops) {
+            if (laptop.getBrand() == brand) {
+                laptop.displayInfo();
+                // Add code to display images, descriptions, and technical specifications here
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            cout << "No product details found for brand " << brand << endl;
+        }
+    }
 };
