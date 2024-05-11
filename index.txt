@@ -1,0 +1,56 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+enum class AccountType { CUSTOMER, ADMIN };
+class User {
+private:
+    string username;
+    string email;
+    string password;
+    AccountType accountType;
+public:
+    User() {}
+    User(string username, string email, string password, AccountType accountType) {
+        this->username = username;
+        this->email = email;
+        this->password = password;
+        this->accountType = accountType;
+    }
+    void displayInfo() {
+        cout << "Username: " << username << endl;
+        cout << "Email: " << email << endl;
+        cout << "Account Type: " << (accountType == AccountType::CUSTOMER ? "Customer" : "Admin") << endl;
+        // For security reasons, don't display the password
+    }
+    string getUsername() const {
+        return username;
+    }
+    string getPassword() const {
+        return password;
+    }
+    AccountType getAccountType() const {
+        return accountType;
+    }
+};
+class UserDatabase {
+private:
+    vector<User> users;
+public:
+    void registerUser() {
+        string username, email, password;
+        int accountTypeChoice;
+        cout << "Enter username: ";
+        cin >> username;
+        cout << "Enter email: ";
+        cin >> email;
+        cout << "Enter password: ";
+        cin >> password;
+        cout << "Select Account Type:\n1. Customer\n2. Admin\nEnter choice: ";
+        cin >> accountTypeChoice;
+        AccountType accountType = (accountTypeChoice == 1) ? AccountType::CUSTOMER : AccountType::ADMIN;
+        User newUser(username, email, password, accountType);
+        users.push_back(newUser);
+        cout << "User registered successfully!" << endl;
+    }
+};
