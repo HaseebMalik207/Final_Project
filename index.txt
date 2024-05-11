@@ -217,4 +217,7 @@ public:
             cout << "No product details found for brand " << brand << endl;
         }
     }
+    void addToCart(User& user, const string& laptopBrand) {
+        user.addToCart(laptopBrand);
+    }
 };
