@@ -114,3 +114,41 @@ public:
         cout << "User with this email does not exist." << endl;
     }
 };
+class Laptop {
+private:
+    string brand;
+    string model;
+    string specifications;
+    double price;
+public:
+    Laptop(string brand, string model, string specifications, double price) {
+        this->brand = brand;
+        this->model = model;
+        this->specifications = specifications;
+        this->price = price;
+    }
+    void displayInfo() {
+        cout << "Brand: " << brand << endl;
+        cout << "Model: " << model << endl;
+        cout << "Specifications: " << specifications << endl;
+        cout << "Price: $" << price << endl;
+    }
+    double getPrice() const {
+        return price;
+    }
+};
+class LaptopCatalog {
+private:
+    vector<Laptop> laptops;
+public:
+    void addLaptop(Laptop laptop) {
+        laptops.push_back(laptop);
+    }
+    void displayCatalog() {
+        cout << "Laptop Catalog" << endl;
+        for (size_t i = 0; i < laptops.size(); ++i) {
+            laptops[i].displayInfo();
+            cout << endl;
+        }
+    }
+};
