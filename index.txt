@@ -74,6 +74,12 @@ private:
     string username;
     string reviewText;
     int rating;
+public:
+    Review(string username, string reviewText, int rating) {
+        this->username = username;
+        this->reviewText = reviewText;
+        this->rating = rating;
+    }
 class UserDatabase {
 private:
     vector<User> users;
