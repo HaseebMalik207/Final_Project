@@ -80,6 +80,12 @@ public:
         this->reviewText = reviewText;
         this->rating = rating;
     }
+    void displayReview() const {
+        cout << "Username: " << username << endl;
+        cout << "Rating: " << rating << " stars" << endl;
+        cout << "Review: " << reviewText << endl;
+    }
+};
 class UserDatabase {
 private:
     vector<User> users;
