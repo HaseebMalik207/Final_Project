@@ -256,17 +256,35 @@ public:
 };
 class Checkout {
 public:
-    void registeredUserCheckout(const User& user, const vector<Laptop>& shoppingCart) {
+    void registeredUserCheckout(User& user, const vector<string>& shoppingCart, int paymentOption) {
         double totalPrice = calculateTotalPrice(shoppingCart);
         cout << "Total Price: $" << totalPrice << endl;
-        // Add logic for processing payment, updating order history, etc.
+        processPayment(totalPrice, paymentOption);
+        // Construct order summary
+        string orderSummary = "Paid $" + to_string(totalPrice) + " via ";
+        if (paymentOption == 1) {
+            orderSummary += "Credit/Debit Card.";
+        } else if (paymentOption == 2) {
+            orderSummary += "PayPal.";
+        } else if (paymentOption == 3) {
+            orderSummary += "Other Online Payment Gateway.";
+        }
+        // Add order summary to user's order history
+        user.addToOrderHistory(orderSummary);
         cout << "Checkout process completed for user " << user.getUsername() << endl;
     }
 private:
-    double calculateTotalPrice(const vector<Laptop>& shoppingCart) {
+    double calculateTotalPrice(const vector<string>& shoppingCart) {
         double totalPrice = 0.0;
+        // Simulate price lookup based on laptop brand
         for (const auto& laptop : shoppingCart) {
-            totalPrice += laptop.getPrice();
+            if (laptop == "Dell") {
+                totalPrice += 699.99;
+            } else if (laptop == "HP") {
+                totalPrice += 899.99;
+            } else if (laptop == "Lenovo") {
+                totalPrice += 1499.99;
+            }
         }
         return totalPrice;
     }
