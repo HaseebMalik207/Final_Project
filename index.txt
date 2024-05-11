@@ -9,6 +9,7 @@ private:
     string email;
     string password;
     AccountType accountType;
+    vector<string> shoppingCart;
 public:
     User() {}
     User(string username, string email, string password, AccountType accountType) {
@@ -37,6 +38,52 @@ public:
     }
     void setPassword(string newPassword) {
         password = newPassword;
+    }
+    void addToCart(const string& laptopBrand) {
+        shoppingCart.push_back(laptopBrand);
+        cout << "Added " << laptopBrand << " to cart." << endl;
+    }
+    void displayCart() const {
+        cout << "Shopping Cart:" << endl;
+        for (const auto& item : shoppingCart) {
+            cout << item << endl;
+        }
+    }
+    void removeItemFromCart(const string& laptopBrand) {
+        for (auto it = shoppingCart.begin(); it != shoppingCart.end(); ++it) {
+            if (*it == laptopBrand) {
+                shoppingCart.erase(it);
+                cout << "Removed " << laptopBrand << " from cart." << endl;
+                return;
+            }
+        }
+        cout << laptopBrand << " is not in the cart." << endl;
+    }
+    const vector<string>& getShoppingCart() const {
+        return shoppingCart;
+    }
+    void addToOrderHistory(const string& order) {
+        orderHistory.push_back(order);
+    }
+    const vector<string>& getOrderHistory() const {
+        return orderHistory;
+    }
+};
+class Review {
+private:
+    string username;
+    string reviewText;
+    int rating;
+public:
+    Review(string username, string reviewText, int rating) {
+        this->username = username;
+        this->reviewText = reviewText;
+        this->rating = rating;
+    }
+    void displayReview() const {
+        cout << "Username: " << username << endl;
+        cout << "Rating: " << rating << " stars" << endl;
+        cout << "Review: " << reviewText << endl;
     }
 };
 class UserDatabase {
@@ -217,4 +264,241 @@ public:
             cout << "No product details found for brand " << brand << endl;
         }
     }
+    void addToCart(User& user, const string& laptopBrand) {
+        user.addToCart(laptopBrand);
+    }
+    void displayCart(User& user) const {
+        user.displayCart();
+    }
+    void removeItemFromCart(User& user, const string& laptopBrand) {
+        user.removeItemFromCart(laptopBrand);
+    }
+    const vector<Laptop>& getLaptops() const {
+        return laptops;
+    }
 };
+class Checkout {
+public:
+    void registeredUserCheckout(User& user, const vector<string>& shoppingCart, int paymentOption) {
+        double totalPrice = calculateTotalPrice(shoppingCart);
+        cout << "Total Price: $" << totalPrice << endl;
+        processPayment(totalPrice, paymentOption);
+        // Construct order summary
+        string orderSummary = "Paid $" + to_string(totalPrice) + " via ";
+        if (paymentOption == 1) {
+            orderSummary += "Credit/Debit Card.";
+        } else if (paymentOption == 2) {
+            orderSummary += "PayPal.";
+        } else if (paymentOption == 3) {
+            orderSummary += "Other Online Payment Gateway.";
+        }
+        // Add order summary to user's order history
+        user.addToOrderHistory(orderSummary);
+        cout << "Checkout process completed for user " << user.getUsername() << endl;
+    }
+private:
+    double calculateTotalPrice(const vector<string>& shoppingCart) {
+        double totalPrice = 0.0;
+        // Simulate price lookup based on laptop brand
+        for (const auto& laptop : shoppingCart) {
+            if (laptop == "Dell") {
+                totalPrice += 699.99;
+            } else if (laptop == "HP") {
+                totalPrice += 899.99;
+            } else if (laptop == "Lenovo") {
+                totalPrice += 1499.99;
+            }
+        }
+        return totalPrice;
+    }
+    void processPayment(double totalPrice, int paymentOption) {
+        switch (paymentOption) {
+            case 1:
+                cout << "Paid $" << totalPrice << " via Credit/Debit Card." << endl;
+                break;
+            case 2:
+                cout << "Paid $" << totalPrice << " via PayPal." << endl;
+                break;
+            case 3:
+                cout << "Paid $" << totalPrice << " via Other Online Payment Gateway." << endl;
+                break;
+            default:
+                cout << "Invalid payment option." << endl;
+        }
+    }
+};
+int main() {
+    UserDatabase database;
+    LaptopCatalog catalog;
+    Checkout checkout;
+    User* loggedInUser = nullptr;
+
+    // Populate the catalog with sample laptops
+    catalog.addLaptop(Laptop("Dell", "Inspiron 15", "Core i5, 8GB RAM, 512GB SSD", 699.99));
+    catalog.addLaptop(Laptop("HP", "Pavilion x360", "Core i7, 16GB RAM, 1TB HDD", 899.99));
+    catalog.addLaptop(Laptop("Lenovo", "ThinkPad X1 Carbon", "Core i7, 16GB RAM, 1TB SSD", 1499.99));
+
+    int choice;
+    while (true) {
+        cout << "1. Register\n2. Login\n3. Password Recovery\n4. View Laptops\n5. Search Laptops\n6. Product Details\n7. Add to Cart\n8. Manage Cart\n9. Checkout\n10. View Order History\n11. Track Orders\n12. Laptop Reviews\n13. Exit\nEnter your choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            database.registerUser();
+        } else if (choice == 2) {
+            string username, password;
+            cout << "Enter username: ";
+            cin >> username;
+            cout << "Enter password: ";
+            cin >> password;
+            loggedInUser = database.loginUser(username, password);
+            if (loggedInUser != nullptr) {
+                cout << "Login successful!" << endl;
+                if (loggedInUser->getAccountType() == AccountType::ADMIN) {
+                    int adminChoice;
+                    cout << "1. Access Admin Dashboard\n2. Logout\nEnter your choice: ";
+                    cin >> adminChoice;
+                    if (adminChoice == 1) {
+                        database.displayAdminDashboard();
+                    } else if (adminChoice == 2) {
+                        cout << "Logging out..." << endl;
+                        loggedInUser = nullptr; // Reset logged-in user
+                    } else {
+                        cout << "Invalid choice. Logging out..." << endl;
+                        loggedInUser = nullptr; // Reset logged-in user
+                    }
+                } else {
+                    loggedInUser->displayInfo();
+                }
+            } else {
+                cout << "Invalid username or password. Please try again." << endl;
+            }
+        } else if (choice == 3) {
+            string userEmail;
+            cout << "Enter your email for password recovery: ";
+            cin >> userEmail;
+            database.passwordRecovery(userEmail);
+        } else if (choice == 4) {
+            catalog.displayCatalog();
+        } else if (choice == 5) {
+            int searchChoice;
+            cout << "Search Laptops by:\n1. Brand\n2. Specifications\n3. Price Range\nEnter your choice: ";
+            cin >> searchChoice;
+
+            if (searchChoice == 1) {
+                string brand;
+                cout << "Enter brand to search for: ";
+                cin >> brand;
+                catalog.searchByBrand(brand);
+            } else if (searchChoice == 2) {
+                string specifications;
+                cout << "Enter specifications to search for: ";
+                cin >> specifications;
+                catalog.searchBySpecifications(specifications);
+            } else if (searchChoice == 3) {
+                double minPrice, maxPrice;
+                cout << "Enter minimum price: $";
+                cin >> minPrice;
+                cout << "Enter maximum price: $";
+                cin >> maxPrice;
+                catalog.searchByPriceRange(minPrice, maxPrice);
+            } else {
+                cout << "Invalid search choice." << endl;
+            }
+        } else if (choice == 6) {
+            string brand;
+            cout << "Enter brand to view details: ";
+            cin >> brand;
+            catalog.displayProductDetails(brand);
+        } else if (choice == 7) {
+            string laptopBrand;
+            if (loggedInUser != nullptr) { // Check if user is logged in
+                cout << "Enter laptop brand to add to cart: ";
+                cin >> laptopBrand;
+                catalog.addToCart(*loggedInUser, laptopBrand);
+            } else {
+                cout << "You need to log in to add items to the cart." << endl;
+            }
+        } else if (choice == 8) {
+            if (loggedInUser != nullptr) { // Check if user is logged in
+                int cartChoice;
+                cout << "1. Display Cart\n2. Remove Item from Cart\nEnter your choice: ";
+                cin >> cartChoice;
+                if (cartChoice == 1) {
+                    catalog.displayCart(*loggedInUser);
+                } else if (cartChoice == 2) {
+                    string laptopBrand;
+                    cout << "Enter laptop brand to remove from cart: ";
+                    cin >> laptopBrand;
+                    catalog.removeItemFromCart(*loggedInUser, laptopBrand);
+                } else {
+                    cout << "Invalid choice." << endl;
+                }
+            } else {
+                cout << "You need to log in to manage your cart." << endl;
+            }
+        } else if (choice == 9) {
+            if (loggedInUser != nullptr) {
+                const vector<string>& userCart = loggedInUser->getShoppingCart();
+                if (!userCart.empty()) {
+                    int paymentOption;
+                    cout << "Select Payment Option:\n1. Credit/Debit Card\n2. PayPal\n3. Other Online Payment Gateway\nEnter your choice: ";
+                    cin >> paymentOption;
+                    // Convert userCart from vector<string> to vector<Laptop> before passing to checkout
+                    vector<Laptop> cartAsLaptops;
+                    for (const auto& brand : userCart) {
+                        for (const auto& laptop : catalog.getLaptops()) {
+                            if (laptop.getBrand() == brand) {
+                                cartAsLaptops.push_back(laptop);
+                                break;
+                            }
+                        }
+                    }
+                    checkout.registeredUserCheckout(*loggedInUser, userCart, paymentOption);
+                } else {
+                    cout << "Your cart is empty. Add items before checkout." << endl;
+                }
+            } else {
+                cout << "You need to log in before checkout." << endl;
+            }
+        } else if (choice == 10) {
+            if (loggedInUser != nullptr) {
+                cout << "Order History for " << loggedInUser->getUsername() << ":" << endl;
+                const vector<string>& orderHistory = loggedInUser->getOrderHistory();
+                if (orderHistory.empty()) {
+                    cout << "No orders found." << endl;
+                } else {
+                    for (const auto& order : orderHistory) {
+                        cout << order << endl;
+                    }
+                }
+            } else {
+                cout << "You need to log in to view order history." << endl;
+            }
+        } else if (choice == 11) {
+            cout << "You need to log in to track orders." << endl;
+        } else if (choice == 12) {
+            int reviewChoice;
+            cout << "1. Add Review\n2. View Reviews\nEnter your choice: ";
+            cin >> reviewChoice;
+
+            if (reviewChoice == 1) {
+                // Add review
+            } else if (reviewChoice == 2) {
+                string brand;
+                cout << "Enter brand to view reviews: ";
+                cin >> brand;
+                catalog.displayReviews(brand);
+            } else {
+                cout << "Invalid choice." << endl;
+            }
+        } else if (choice == 13) {
+            cout << "Exiting the program..." << endl;
+            break;
+        } else {
+            cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}
