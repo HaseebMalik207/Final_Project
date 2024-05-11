@@ -64,4 +64,37 @@ public:
         }
         return nullptr; // Return nullptr if user not found or password doesn't match
     }
+    void displayAdminDashboard() {
+        cout << "Admin Dashboard" << endl;
+        cout << "1. Manage Products\n2. Manage Orders\n3. Manage User Accounts\n4. Manage Inventory\n5. Website Settings\n6. Exit\nEnter your choice: ";
+        int choice;
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                // Add code for managing products
+                cout << "Managing Products..." << endl;
+                break;
+            case 2:
+                // Add code for managing orders
+                cout << "Managing Orders..." << endl;
+                break;
+            case 3:
+                // Add code for managing user accounts
+                cout << "Managing User Accounts..." << endl;
+                break;
+            case 4:
+                // Add code for managing inventory
+                cout << "Managing Inventory..." << endl;
+                break;
+            case 5:
+                // Add code for website settings
+                cout << "Website Settings..." << endl;
+                break;
+            case 6:
+                cout << "Exiting admin dashboard..." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
 };
