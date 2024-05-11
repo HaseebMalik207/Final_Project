@@ -220,4 +220,10 @@ public:
     void addToCart(User& user, const string& laptopBrand) {
         user.addToCart(laptopBrand);
     }
+    void displayCart(User& user) const {
+        user.displayCart();
+    }
+    void removeItemFromCart(User& user, const string& laptopBrand) {
+        user.removeItemFromCart(laptopBrand);
+    }
 };
