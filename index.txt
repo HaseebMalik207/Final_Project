@@ -69,6 +69,11 @@ public:
         return orderHistory;
     }
 };
+class Review {
+private:
+    string username;
+    string reviewText;
+    int rating;
 class UserDatabase {
 private:
     vector<User> users;
