@@ -38,6 +38,29 @@ public:
     void setPassword(string newPassword) {
         password = newPassword;
     }
+    void addToCart(const string& laptopBrand) {
+        shoppingCart.push_back(laptopBrand);
+        cout << "Added " << laptopBrand << " to cart." << endl;
+    }
+    void displayCart() const {
+        cout << "Shopping Cart:" << endl;
+        for (const auto& item : shoppingCart) {
+            cout << item << endl;
+        }
+    }
+    void removeItemFromCart(const string& laptopBrand) {
+        for (auto it = shoppingCart.begin(); it != shoppingCart.end(); ++it) {
+            if (*it == laptopBrand) {
+                shoppingCart.erase(it);
+                cout << "Removed " << laptopBrand << " from cart." << endl;
+                return;
+            }
+        }
+        cout << laptopBrand << " is not in the cart." << endl;
+    }
+    const vector<string>& getShoppingCart() const {
+        return shoppingCart;
+    }
 };
 class UserDatabase {
 private:
@@ -225,5 +248,25 @@ public:
     }
     void removeItemFromCart(User& user, const string& laptopBrand) {
         user.removeItemFromCart(laptopBrand);
+    }
+    const vector<Laptop>& getLaptops() const {
+        return laptops;
+    }
+};
+class Checkout {
+public:
+    void registeredUserCheckout(const User& user, const vector<Laptop>& shoppingCart) {
+        double totalPrice = calculateTotalPrice(shoppingCart);
+        cout << "Total Price: $" << totalPrice << endl;
+        // Add logic for processing payment, updating order history, etc.
+        cout << "Checkout process completed for user " << user.getUsername() << endl;
+    }
+private:
+    double calculateTotalPrice(const vector<Laptop>& shoppingCart) {
+        double totalPrice = 0.0;
+        for (const auto& laptop : shoppingCart) {
+            totalPrice += laptop.getPrice();
+        }
+        return totalPrice;
     }
 };
