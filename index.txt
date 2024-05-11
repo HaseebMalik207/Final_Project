@@ -32,6 +32,9 @@ public:
     AccountType getAccountType() const {
         return accountType;
     }
+    bool verifyPassword(string inputPassword) const {
+        return password == inputPassword;
+    }
 };
 class UserDatabase {
 private:
@@ -52,5 +55,13 @@ public:
         User newUser(username, email, password, accountType);
         users.push_back(newUser);
         cout << "User registered successfully!" << endl;
+    }
+    User* loginUser(string username, string password) {
+        for (auto& user : users) {
+            if (user.getUsername() == username && user.verifyPassword(password)) {
+                return &user;
+            }
+        }
+        return nullptr; // Return nullptr if user not found or password doesn't match
     }
 };
