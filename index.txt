@@ -9,6 +9,7 @@ private:
     string email;
     string password;
     AccountType accountType;
+    vector<string> shoppingCart;
 public:
     User() {}
     User(string username, string email, string password, AccountType accountType) {
@@ -268,5 +269,20 @@ private:
             totalPrice += laptop.getPrice();
         }
         return totalPrice;
+    }
+    void processPayment(double totalPrice, int paymentOption) {
+        switch (paymentOption) {
+            case 1:
+                cout << "Paid $" << totalPrice << " via Credit/Debit Card." << endl;
+                break;
+            case 2:
+                cout << "Paid $" << totalPrice << " via PayPal." << endl;
+                break;
+            case 3:
+                cout << "Paid $" << totalPrice << " via Other Online Payment Gateway." << endl;
+                break;
+            default:
+                cout << "Invalid payment option." << endl;
+        }
     }
 };
