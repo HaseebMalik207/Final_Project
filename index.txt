@@ -35,6 +35,9 @@ public:
     bool verifyPassword(string inputPassword) const {
         return password == inputPassword;
     }
+    void setPassword(string newPassword) {
+        password = newPassword;
+    }
 };
 class UserDatabase {
 private:
@@ -96,5 +99,18 @@ public:
             default:
                 cout << "Invalid choice. Please try again." << endl;
         }
+    }
+    void passwordRecovery(string userEmail) {
+        for (auto& user : users) {
+            if (user.getEmail() == userEmail) {
+                string newPassword;
+                cout << "Enter new password: ";
+                cin >> newPassword;
+                user.setPassword(newPassword);
+                cout << "Password updated successfully!" << endl;
+                return;
+            }
+        }
+        cout << "User with this email does not exist." << endl;
     }
 };
