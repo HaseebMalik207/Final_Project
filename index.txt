@@ -136,6 +136,15 @@ public:
     double getPrice() const {
         return price;
     }
+    const string& getBrand() const {
+        return brand;
+    }
+    const string& getSpecifications() const {
+        return specifications;
+    }
+    double getPrice() const {
+        return price;
+    }
 };
 class LaptopCatalog {
 private:
@@ -149,6 +158,48 @@ public:
         for (size_t i = 0; i < laptops.size(); ++i) {
             laptops[i].displayInfo();
             cout << endl;
+        }
+    }
+    void searchByBrand(const string& brand) const {
+        cout << "Search Results for Brand: " << brand << endl;
+        bool found = false;
+        for (const auto& laptop : laptops) {
+            if (laptop.getBrand() == brand) {
+                laptop.displayInfo();
+                cout << endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "No laptops found with brand " << brand << endl;
+        }
+    }
+    void searchBySpecifications(const string& specs) const {
+        cout << "Search Results for Specifications: " << specs << endl;
+        bool found = false;
+        for (const auto& laptop : laptops) {
+            if (laptop.getSpecifications() == specs) {
+                laptop.displayInfo();
+                cout << endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "No laptops found with specifications " << specs << endl;
+        }
+    }
+    void searchByPriceRange(double minPrice, double maxPrice) const {
+        cout << "Search Results for Price Range: $" << minPrice << " - $" << maxPrice << endl;
+        bool found = false;
+        for (const auto& laptop : laptops) {
+            if (laptop.getPrice() >= minPrice && laptop.getPrice() <= maxPrice) {
+                laptop.displayInfo();
+                cout << endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "No laptops found within the specified price range" << endl;
         }
     }
 };
